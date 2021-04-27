@@ -1,0 +1,1 @@
+%windir%\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass -NoExit -Command "& 'C:\tools\Anaconda2\shell\condabin\conda-hook.ps1' ; conda activate 'C:\tools\Anaconda2'; conda activate k39; python index.py"

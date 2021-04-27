@@ -1,0 +1,129 @@
+{% include "./base/layout.html" %}
+
+{% block main %}
+<main class="container">
+    <div class="starter-template py-5 px-3">
+        <h1>{{title|title}}</h1>                
+    </div>
+    <div class="row">                                    
+    {% set total = videos[link].amount %}                                           
+        <div class="col-12 col-md-9" id="containerVideo">
+            <label for="video_">Aula: <strong id="numberVideo"></strong></label>
+            <div class="ratio ratio-21x9" style="background: #000;">                        
+                <video controls id="video_" controls>
+                    <source src="" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class="col-12 col-md-3 text-left" id="containerMenu">
+            <div id="navMenu">
+                {% for v in range(1, total + 1) %}            
+                <h3 id="play_{{v}}" class="player"><i class="fas fa-play-circle"></i> Play aula {{v}}</h3>
+                {% endfor %}     
+            </div>            
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+    (()=>{
+
+        const $player = document.querySelector('video#video_ source')
+        const $numberVideo = document.querySelector('#numberVideo')
+
+        let videoNow = null
+
+        const setVideo = () => {
+            let defaultVideo = `{{path}}/{{link}}/01.mp4`;
+            localStorage.setItem('video', defaultVideo)
+            localStorage.setItem('numb_video', '01')
+            $numberVideo.innerHTML = `01`
+            $player.setAttribute('src', `${defaultVideo}`)
+        }
+
+        if (!localStorage.getItem('video')){
+            setVideo()
+        }else{            
+            if (localStorage.getItem('nome_curso') != '{{link}}'){
+                localStorage.setItem('nome_curso', `{{link}}`)
+                setVideo()
+            }else {
+                localStorage.setItem('nome_curso', `{{link}}`)
+                $numberVideo.innerHTML = localStorage.getItem('numb_video')
+                $player.setAttribute('src', `${localStorage.getItem('video')}`)
+            }
+        }
+
+        let players = document.querySelectorAll('.player')
+        players.forEach(el => {
+            el.addEventListener('click', (e) => {
+
+                let id = e.currentTarget.id                
+                id = id.split('play_')[1].padStart(2, '0')
+
+                if (localStorage.getItem('numb_video') != id ){
+                    let video = document.querySelector('video#video_')
+                    video.pause()
+                    play_video(`${id}`)
+                    video.load()
+                    video.play()
+                }
+            })    
+        })
+        
+        const play_video = (video) =>{            
+            videoNow = `{{path}}/{{link}}/${video}.mp4`
+            localStorage.setItem('video', videoNow)
+            localStorage.setItem('numb_video', video)
+            $numberVideo.innerHTML = `${video}`
+            $player.setAttribute('src', `${videoNow}`)            
+        }
+
+    })()
+</script>
+{% endblock %}
+
+{% block style %}
+<style>
+    body{
+        height: 100vh;
+        background: linear-gradient(
+            rgba(0, 0, 0, 0.0), 
+            rgba(0, 0, 0, 0.7)
+        ),url('/images/bg.jpg');
+        background-size: cover;        
+    }
+    label, h1{
+        color: aliceblue;
+    }
+    h1{
+        text-align: right;
+    }
+    label{
+        padding-bottom: 1.5rem;
+    }
+    #containerVideo{
+        background: rgba(0, 0, 0, 0.7);
+        padding: 1rem 0.8rem;
+    }
+    #containerMenu{
+        display: flex;
+        background: rgba(0, 0, 0, 0.7);
+        text-align: center;
+    }
+    #navMenu{
+        width: 100%;      
+        flex-direction: column;
+        align-self: center;
+        align-items: stretch;                
+    }
+    .player{
+        font-size: 1.5rem;
+        color: aliceblue;
+        cursor: pointer;
+        padding: 0.8rem 0.5rem;
+    }    
+</style>
+{% endblock %}

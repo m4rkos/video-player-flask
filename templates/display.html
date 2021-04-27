@@ -1,0 +1,23 @@
+{% include "./base/layout.html" %}
+
+{% block main %}
+<main class="container">
+    <div class="starter-template text-center py-5 px-3">
+        <h1>Cursos {{title}}</h1>
+        <p class="lead">Escolha um curso abaixo</p>
+    </div>
+    <div class="row">                                    
+    {% for v in videos %}
+        <div class="col-12 col-md-4 text-center">                                        
+            <div class="card" style="margin-bottom: 1.5rem">
+                <img src="/images/thumb.png" alt="{{videos[v].label}}" style="width: 100%" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">{{videos[v].label|title}}</h5>                                                        
+                    <a href="/curso/{{v}}" class="btn btn-primary">Assistir</a>    
+                </div>
+            </div>
+        </div>                   
+    {% endfor %}                    
+    </div>
+</main>
+{% endblock %}
